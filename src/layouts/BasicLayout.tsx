@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
   UserOutlined,
@@ -32,15 +32,29 @@ const TopNavMenu = [
     link: 'user',
     disabled: false,
   },
+  {
+    name: '关联分析',
+    link: 'design',
+    disabled: false,
+  },
 ];
 
+const findPathName = (link: string) => {
+  console.log('link', link);
+  let newTitle = TopNavMenu.find((element) => element.link === link).name;
+  return newTitle;
+};
+
 interface BasicLayoutProps {
-  location:object;
+  pathname: string;
+  location: object;
 }
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
-  const { children ,location } = props;
-  console.log(props);
-  
+  const { children, location } = props;
+  const pageIndex = location.pathname.split('/')[1];
+  console.log('path');
+  const [title, setTile] = useState(findPathName(pageIndex));
+  const [index, SetIndex] = useState(pageIndex);
   useEffect(() => {}, []);
   return (
     <div>
@@ -50,10 +64,16 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['home']}
-            defaultOpenKeys={['home']}
-            onClick={({ key }) => {
+            defaultSelectedKeys={[pageIndex]}
+            defaultOpenKeys={[pageIndex]}
+            onClick={({ item, key, keyPath, domEvent }) => {
+              // setTile("啥也")
+              // console.log("item",item);
+              // console.log("key",key);
+              // console.log("keyPath",keyPath)
+              // console.log("domEvent",domEvent)
 
+              setTile(findPathName(key));
               history.push(key);
             }}
           >
@@ -88,7 +108,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
           <Layout style={{ padding: '0 24px 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>React</Breadcrumb.Item>
-              <Breadcrumb.Item>{location.pathname}</Breadcrumb.Item>
+              <Breadcrumb.Item>{title}</Breadcrumb.Item>
             </Breadcrumb>
             <Content
               className="site-layout-background"

@@ -9,10 +9,12 @@ export default defineConfig({
       path: '/',
       component: '@/layouts/BasicLayout',
       routes: [
+        { path: '/home', component: '@/pages/index' },
         { path: '/cart', component: '@/pages/cart/index' },
         { path: '/olist', component: '@/pages/olist/index' },
         { path: '/user', component: '@/pages/user/index' },
         { path: '/login', component: '@/pages/login/index' },
+        { path: '/design', component: '@/pages/design/index' },
       ],
     },
   ],
