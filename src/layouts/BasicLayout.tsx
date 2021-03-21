@@ -5,7 +5,7 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
-import { history } from 'umi';
+import { history, Location, Dispatch, connect } from 'umi';
 // import './layout.less';
 
 const { SubMenu } = Menu;
@@ -47,15 +47,24 @@ const findPathName = (link: string) => {
 
 interface BasicLayoutProps {
   pathname: string;
-  location: object;
+  location: Location;
+  dispatch: Dispatch;
+  user: any;
 }
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
-  const { children, location } = props;
+  const { children, location, user, dispatch } = props;
   const pageIndex = location.pathname.split('/')[1];
-  console.log('path');
+  console.log('user', props);
   const [title, setTile] = useState(findPathName(pageIndex));
-  const [index, SetIndex] = useState(pageIndex);
-  useEffect(() => {}, []);
+  const [index, setIndex] = useState(pageIndex);
+  useEffect(() => {
+    // 获取用户信息
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchCurrent',
+      });
+    }
+  }, []);
   return (
     <div>
       <Layout>
@@ -126,4 +135,4 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     </div>
   );
 };
-export default BasicLayout;
+export default connect(({ user }) => ({user}))(BasicLayout);
