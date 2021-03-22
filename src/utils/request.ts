@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 
-const codeMessage = {
+const codeMessages = {
   200: '服务器成功返回请求的数据',
   201: '新建或修改数据成功',
   202: '一个请求已经进入后台排队（异步任务）',
@@ -23,6 +23,9 @@ const codeMessage = {
 };
 
 // 异常处理程序
+export interface response{
+  status: number
+}
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
   if (response && response.status) {

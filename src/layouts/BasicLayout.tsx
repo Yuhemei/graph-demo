@@ -5,7 +5,8 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
-import { history, Location, Dispatch, connect } from 'umi';
+import { history,  Dispatch, connect, Redirect } from 'umi';
+import { ConnectState, UserModelState, ConnectProps } from '@/models/connect';
 // import './layout.less';
 
 const { SubMenu } = Menu;
@@ -41,20 +42,37 @@ const TopNavMenu = [
 
 const findPathName = (link: string) => {
   console.log('link', link);
-  let newTitle = TopNavMenu.find((element) => element.link === link).name;
-  return newTitle;
+  let newTitle = TopNavMenu.find((element) => element.link === link);
+  if (newTitle) {
+    return newTitle.name;
+  } else if (link === 'login') {
+    return '登录';
+  }
 };
 
-interface BasicLayoutProps {
-  pathname: string;
-  location: Location;
+interface BasicLayoutProps extends ConnectProps {
   dispatch: Dispatch;
-  user: any;
+  user: UserModelState;
 }
-const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
-  const { children, location, user, dispatch } = props;
+const BasicLayout: React.FC<BasicLayoutProps> = ({
+  children,
+  location,
+  user,
+  dispatch,
+}) => {
   const pageIndex = location.pathname.split('/')[1];
-  console.log('user', props);
+  console.log("pageIndex",pageIndex)
+  const { userId } = user.currentUser;
+  console.log('user.currentUser',user.currentUser);
+  const isLogin = !!userId;
+  console.log('isLogin', isLogin);
+  if (!isLogin) {
+    return (
+      <Redirect
+        to={{ pathname: '/login', state: { from: location.pathname } }}
+      />
+    );
+  }
   const [title, setTile] = useState(findPathName(pageIndex));
   const [index, setIndex] = useState(pageIndex);
   useEffect(() => {
@@ -64,7 +82,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         type: 'user/fetchCurrent',
       });
     }
+    console.log('user', user);
   }, []);
+
   return (
     <div>
       <Layout>
@@ -135,4 +155,4 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     </div>
   );
 };
-export default connect(({ user }) => ({user}))(BasicLayout);
+export default connect(({ user }: ConnectState) => ({ user }))(BasicLayout);
