@@ -45,9 +45,8 @@ const findPathName = (link: string) => {
   let newTitle = TopNavMenu.find((element) => element.link === link);
   if (newTitle) {
     return newTitle.name;
-  } else if (link === 'login') {
-    return '登录';
   }
+  return link;
 };
 
 interface BasicLayoutProps extends ConnectProps {
@@ -68,8 +67,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
     location.pathname !== '/' ? location.pathname.split('/')[1] : 'home';
   const [title, setTile] = useState(findPathName(pageIndex));
   const [index, setIndex] = useState(pageIndex);
-  console.log('pageIndex', location.pathname);
-
   useEffect(() => {
     // 获取用户信息
     if (dispatch) {
