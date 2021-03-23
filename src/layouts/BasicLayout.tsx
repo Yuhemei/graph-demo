@@ -5,7 +5,7 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
-import { history,  Dispatch, connect, Redirect } from 'umi';
+import { history, Dispatch, connect, Redirect } from 'umi';
 import { ConnectState, UserModelState, ConnectProps } from '@/models/connect';
 // import './layout.less';
 
@@ -39,7 +39,7 @@ const TopNavMenu = [
     disabled: false,
   },
 ];
-
+// 对路由进行处理，处理成汉字
 const findPathName = (link: string) => {
   console.log('link', link);
   let newTitle = TopNavMenu.find((element) => element.link === link);
@@ -60,21 +60,16 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   user,
   dispatch,
 }) => {
-  const pageIndex = location.pathname.split('/')[1];
-  console.log("pageIndex",pageIndex)
-  const { userId } = user.currentUser;
-  console.log('user.currentUser',user.currentUser);
-  const isLogin = !!userId;
-  console.log('isLogin', isLogin);
-  if (!isLogin) {
-    return (
-      <Redirect
-        to={{ pathname: '/login', state: { from: location.pathname } }}
-      />
-    );
-  }
+  console.log(
+    "location.pathname.split('/')[1]",
+    location.pathname.split('/')[1],
+  );
+  const pageIndex =
+    location.pathname !== '/' ? location.pathname.split('/')[1] : 'home';
   const [title, setTile] = useState(findPathName(pageIndex));
   const [index, setIndex] = useState(pageIndex);
+  console.log('pageIndex', location.pathname);
+
   useEffect(() => {
     // 获取用户信息
     if (dispatch) {
@@ -82,9 +77,42 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
         type: 'user/fetchCurrent',
       });
     }
-    console.log('user', user);
   }, []);
+  console.log('user.currentUser', user.currentUser);
+  const { userId } = user.currentUser;
+  console.log('userid', userId);
+  const isLogin = !!userId;
+  console.log('isLogin', isLogin);
 
+  console.log('currentUser', user.currentUser);
+  if (!isLogin) {
+    return (
+      <Redirect
+        to={{ pathname: '/login', state: { from: location.pathname } }}
+      />
+    );
+  }
+  console.log('pageIndex', pageIndex);
+  // 导航栏路由跳转
+  const jump = ({
+    item,
+    key,
+    keyPath,
+    domEvent,
+  }: {
+    item: object;
+    key: string;
+    keyPath: any;
+    domEvent: any;
+  }) => {
+    setTile('啥也');
+    // console.log('item', item);
+    // console.log('key', key);
+    // console.log('keyPath', keyPath);
+    // console.log('domEvent', domEvent);
+    setTile(findPathName(key));
+    history.push(key);
+  };
   return (
     <div>
       <Layout>
@@ -95,16 +123,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
             mode="horizontal"
             defaultSelectedKeys={[pageIndex]}
             defaultOpenKeys={[pageIndex]}
-            onClick={({ item, key, keyPath, domEvent }) => {
-              // setTile("啥也")
-              // console.log("item",item);
-              // console.log("key",key);
-              // console.log("keyPath",keyPath)
-              // console.log("domEvent",domEvent)
-
-              setTile(findPathName(key));
-              history.push(key);
-            }}
+            onClick={jump}
           >
             {TopNavMenu.map(({ name, link, disabled }) => {
               return <Menu.Item key={link}>{name}</Menu.Item>;
