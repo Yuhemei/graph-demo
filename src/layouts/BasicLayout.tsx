@@ -19,23 +19,23 @@ const TopNavMenu = [
     disabled: false,
   },
   {
-    name: '购物车',
-    link: 'cart',
-    disabled: false,
-  },
-  {
-    name: '商品列表',
-    link: 'olist',
-    disabled: false,
-  },
-  {
-    name: '用户',
-    link: 'user',
+    name: '工作台',
+    link: 'workbench',
     disabled: false,
   },
   {
     name: '关联分析',
     link: 'design',
+    disabled: false,
+  },
+  {
+    name: '知识管理',
+    link: 'knowledgeManagement',
+    disabled: false,
+  },
+  {
+    name: '配置管理',
+    link: 'configManagement',
     disabled: false,
   },
 ];
@@ -81,23 +81,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
     );
   }
   // 导航栏路由跳转
-  const jump = ({
-    item,
-    key,
-    keyPath,
-    domEvent,
-  }: {
-    item: object;
-    key: string;
-    keyPath: any;
-    domEvent: any;
-  }) => {
-    setTile('啥也');
-    // console.log('item', item);
-    // console.log('key', key);
-    // console.log('keyPath', keyPath);
-    // console.log('domEvent', domEvent);
+  const jump = ({ key }:{key:string})  => {
     setTile(findPathName(key));
+    console.log();
     history.push(key);
   };
   return (
@@ -110,7 +96,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
             mode="horizontal"
             defaultSelectedKeys={[pageIndex]}
             defaultOpenKeys={[pageIndex]}
-            onClick={() =>jump}
+            onClick={jump}
           >
             {TopNavMenu.map(({ name, link, disabled }) => {
               return <Menu.Item key={link}>{name}</Menu.Item>;
