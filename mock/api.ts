@@ -5,7 +5,7 @@ export default {
   'GET /api/users': {
     status: 200,
     name: '莎士比亚',
-    userId: null ,
+    userId: 8088 ,
   },
 
   // GET 可忽略

@@ -20,7 +20,10 @@
     ]
   },
   "dependencies": {
+    "@ant-design/pro-form": "^1.18.4",
     "@ant-design/pro-layout": "^6.5.0",
+    "@antv/graphin": "^2.0.4",
+    "@antv/graphin-components": "^2.0.1",
     "@umijs/preset-react": "1.x",
     "mockjs": "^1.1.0",
     "umi": "^3.3.10"

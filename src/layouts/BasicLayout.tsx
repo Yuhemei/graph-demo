@@ -6,8 +6,8 @@ import {
   NotificationOutlined,
 } from '@ant-design/icons';
 import { history, Dispatch, connect, Redirect } from 'umi';
-import { ConnectState, UserModelState, ConnectProps } from '@/models/connect';
-// import './layout.less';
+import { ConnectState, UserModelState, ConnectProps } from '@/models/connect.d';
+import './layout.less';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -41,7 +41,6 @@ const TopNavMenu = [
 ];
 // 对路由进行处理，处理成汉字
 const findPathName = (link: string) => {
-  console.log('link', link);
   let newTitle = TopNavMenu.find((element) => element.link === link);
   if (newTitle) {
     return newTitle.name;
@@ -59,10 +58,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
   user,
   dispatch,
 }) => {
-  console.log(
-    "location.pathname.split('/')[1]",
-    location.pathname.split('/')[1],
-  );
   const pageIndex =
     location.pathname !== '/' ? location.pathname.split('/')[1] : 'home';
   const [title, setTile] = useState(findPathName(pageIndex));
@@ -75,13 +70,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
       });
     }
   }, []);
-  console.log('user.currentUser', user.currentUser);
   const { userId } = user.currentUser;
-  console.log('userid', userId);
   const isLogin = !!userId;
-  console.log('isLogin', isLogin);
 
-  console.log('currentUser', user.currentUser);
   if (!isLogin) {
     return (
       <Redirect
@@ -89,7 +80,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
       />
     );
   }
-  console.log('pageIndex', pageIndex);
   // 导航栏路由跳转
   const jump = ({
     item,
@@ -120,7 +110,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
             mode="horizontal"
             defaultSelectedKeys={[pageIndex]}
             defaultOpenKeys={[pageIndex]}
-            onClick={jump}
+            onClick={() =>jump}
           >
             {TopNavMenu.map(({ name, link, disabled }) => {
               return <Menu.Item key={link}>{name}</Menu.Item>;
