@@ -2,10 +2,16 @@ import mockjs from 'mockjs';
 
 export default {
   // 支持值为 Object 和 Array
-  'GET /api/users': {
-    status: 200,
-    name: '莎士比亚',
-    userId: 8088,
+  'POST /api/users': (req, res) => {
+    console.log('req', req);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.end('ok');
+    console.log('res', res);
+    res = {
+      status: 200,
+      name: '莎士比亚',
+      userId: 8088,
+    };
   },
 
   // GET 可忽略

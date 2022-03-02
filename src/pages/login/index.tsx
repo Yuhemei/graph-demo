@@ -14,23 +14,25 @@ interface LoginProps extends ConnectProps {
 
 // 延迟时间
 const waitTime = (time: number = 100) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve(true);
+  //   }, time);
+  // });
 };
 
 const Login: React.FC<LoginProps> = ({ user, location, dispatch }) => {
   // 登录校验
-  if (dispatch) {
-    dispatch({ type: 'user/fetchCurrent' });
-  }
+
   const { userId } = user.currentUser;
+  console.log('debugger:user', user);
+
   const isLogin = !!userId;
   if (isLogin) {
     const { from = '/' } = location.state || {};
     return <Redirect to={from} />;
+  } else {
+    message.success('登陆失败');
   }
   return (
     <div
@@ -41,8 +43,20 @@ const Login: React.FC<LoginProps> = ({ user, location, dispatch }) => {
     >
       <ProForm
         onFinish={async () => {
-          await waitTime(2000);
-          message.success('登陆成功');
+          // await waitTime(2000);
+          if (dispatch) {
+            dispatch({ type: 'user/fetchCurrent' });
+          }
+          const { userId } = user.currentUser;
+          const isLogin = !!userId;
+          if (isLogin) {
+            const { from = '/' } = location.state || {};
+            message.success('登陆成功');
+            return <Redirect to={from} />;
+          } else {
+            message.success('登陆失败');
+          }
+          console.log('debugger:user', user);
         }}
         submitter={{
           searchConfig: { submitText: '登录' },
@@ -113,7 +127,7 @@ const Login: React.FC<LoginProps> = ({ user, location, dispatch }) => {
           ]}
           placeholder="请输入验证码"
           onGetCaptcha={async (phone) => {
-            await waitTime(1000);
+            // await waitTime(1000);
             message.success(`手机号 ${phone} 验证码发送成功!`);
           }}
         />
