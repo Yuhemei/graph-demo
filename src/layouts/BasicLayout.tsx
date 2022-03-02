@@ -11,7 +11,11 @@ import { history, Location, Dispatch, connect } from 'umi';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-const TopNavMenu = [
+const TopNavMenu: {
+  name: string;
+  link: string;
+  disabled: boolean;
+}[] = [
   {
     name: '首页',
     link: 'home',
@@ -40,9 +44,12 @@ const TopNavMenu = [
 ];
 
 const findPathName = (link: string) => {
-  console.log('link', link);
-  let newTitle = TopNavMenu.find((element) => element.link === link).name;
-  return newTitle;
+  if (link) {
+    let el: any = TopNavMenu.find((element) => element.link === link);
+    console.log('debugger:link', link);
+    return el.name;
+  } else {
+  }
 };
 
 interface BasicLayoutProps {
@@ -54,7 +61,7 @@ interface BasicLayoutProps {
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   const { children, location, user, dispatch } = props;
   const pageIndex = location.pathname.split('/')[1];
-  console.log('user', props);
+  console.log('debugger:props', props);
   const [title, setTile] = useState(findPathName(pageIndex));
   const [index, setIndex] = useState(pageIndex);
   useEffect(() => {
@@ -76,14 +83,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
             defaultSelectedKeys={[pageIndex]}
             defaultOpenKeys={[pageIndex]}
             onClick={({ item, key, keyPath, domEvent }) => {
-              // setTile("啥也")
-              // console.log("item",item);
-              // console.log("key",key);
-              // console.log("keyPath",keyPath)
-              // console.log("domEvent",domEvent)
+              setTile('啥也');
+              console.log('item', item);
+              console.log('key', key);
+              console.log('keyPath', keyPath);
+              console.log('domEvent', domEvent);
 
-              setTile(findPathName(key));
-              history.push(key);
+              // setTile(findPathName(key));
+              // history.push(key);
             }}
           >
             {TopNavMenu.map(({ name, link, disabled }) => {
@@ -135,4 +142,4 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     </div>
   );
 };
-export default connect(({ user }) => ({user}))(BasicLayout);
+export default connect(({ user }) => ({ user }))(BasicLayout);
