@@ -5,16 +5,23 @@ export default defineConfig({
     type: 'none',
   },
   routes: [
+    { path: '/login', component: '@/pages/login' },
     {
       path: '/',
       component: '@/layouts/BasicLayout',
       routes: [
+        { path: '/', redirect: '/home' },
         { path: '/home', component: '@/pages/index' },
-        { path: '/cart', component: '@/pages/cart/index' },
-        { path: '/olist', component: '@/pages/olist/index' },
-        { path: '/user', component: '@/pages/user/index' },
-        { path: '/login', component: '@/pages/login/index' },
+        { path: '/workbench', component: '@/pages/workbench/index' },
         { path: '/design', component: '@/pages/design/index' },
+        {
+          path: '/knowledgeManagement',
+          component: '@/pages/knowledgeManagement/index',
+        },
+        {
+          path: '/configManagement',
+          component: '@/pages/configManagement/index',
+        },
       ],
     },
   ],

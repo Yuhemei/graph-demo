@@ -5,8 +5,9 @@ import {
   LaptopOutlined,
   NotificationOutlined,
 } from '@ant-design/icons';
-import { history, Location, Dispatch, connect } from 'umi';
-// import './layout.less';
+import { history, Dispatch, connect, Redirect } from 'umi';
+import { ConnectState, UserModelState, ConnectProps } from '@/models/connect.d';
+import './layout.less';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -22,18 +23,8 @@ const TopNavMenu: {
     disabled: false,
   },
   {
-    name: '购物车',
-    link: 'cart',
-    disabled: false,
-  },
-  {
-    name: '商品列表',
-    link: 'olist',
-    disabled: false,
-  },
-  {
-    name: '用户',
-    link: 'user',
+    name: '工作台',
+    link: 'workbench',
     disabled: false,
   },
   {
@@ -41,8 +32,18 @@ const TopNavMenu: {
     link: 'design',
     disabled: false,
   },
+  {
+    name: '知识管理',
+    link: 'knowledgeManagement',
+    disabled: false,
+  },
+  {
+    name: '配置管理',
+    link: 'configManagement',
+    disabled: false,
+  },
 ];
-
+// 对路由进行处理，处理成汉字
 const findPathName = (link: string) => {
   if (link) {
     let el: any = TopNavMenu.find((element) => element.link === link);
@@ -52,11 +53,9 @@ const findPathName = (link: string) => {
   }
 };
 
-interface BasicLayoutProps {
-  pathname: string;
-  location: Location;
+interface BasicLayoutProps extends ConnectProps {
   dispatch: Dispatch;
-  user: any;
+  user: UserModelState;
 }
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   const { children, location, user, dispatch } = props;
@@ -72,6 +71,22 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       });
     }
   }, []);
+  const { userId } = user.currentUser;
+  const isLogin = !!userId;
+
+  if (!isLogin) {
+    return (
+      <Redirect
+        to={{ pathname: '/login', state: { from: location.pathname } }}
+      />
+    );
+  }
+  // 导航栏路由跳转
+  const jump = ({ key }: { key: string }) => {
+    setTile(findPathName(key));
+    console.log();
+    history.push(key);
+  };
   return (
     <div>
       <Layout>

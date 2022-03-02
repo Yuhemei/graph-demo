@@ -3,7 +3,7 @@ import { Effect, Reducer } from 'umi';
 
 interface CurrentUser {
   name?: string;
-  id?: number;
+  userId?: number;
 }
 
 export interface UserModelState {
