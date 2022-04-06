@@ -42,6 +42,11 @@ const TopNavMenu: {
     link: 'configManagement',
     disabled: false,
   },
+  {
+    name: '登录',
+    link: 'login',
+    disabled: false,
+  },
 ];
 // 对路由进行处理，处理成汉字
 const findPathName = (link: string) => {
@@ -72,7 +77,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     }
   }, []);
   const { userId } = user.currentUser;
-  const isLogin = !!userId;
+  // 判断是否已登陆
+  // const isLogin = !!userId;
+  const isLogin = true;
 
   if (!isLogin) {
     return (
@@ -88,7 +95,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     history.push(key);
   };
   return (
-    <div>
+    <div className="basic-layout">
       <Layout>
         <Header className="header">
           <div className="logo" />

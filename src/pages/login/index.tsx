@@ -1,137 +1,185 @@
-import React from 'react';
-import styles from './index.less';
-import { connect, Redirect, Dispatch } from 'umi';
+import { connect, Redirect, Dispatch, history, useIntl } from 'umi';
 import { ConnectState, ConnectProps, UserModelState } from '@/models/connect';
-// 组件引入
-import { message } from 'antd';
-import ProForm, { ProFormText, ProFormCaptcha } from '@ant-design/pro-form';
-import { MobileOutlined, MailOutlined } from '@ant-design/icons';
+import {
+  LoginForm,
+  ProFormText,
+  ProFormCaptcha,
+  ProFormCheckbox,
+} from '@ant-design/pro-form';
+import {
+  UserOutlined,
+  MobileOutlined,
+  LockOutlined,
+  AlipayCircleOutlined,
+  TaobaoCircleOutlined,
+  WeiboCircleOutlined,
+} from '@ant-design/icons';
+import { message, Tabs, Space } from 'antd';
+import type { CSSProperties } from 'react';
+import { useState } from 'react';
 
-interface LoginProps extends ConnectProps {
-  user: UserModelState;
-  dispatch: Dispatch;
-}
+type LoginType = 'account' | 'phone';
 
-// 延迟时间
-const waitTime = (time: number = 100) => {
-  // return new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     resolve(true);
-  //   }, time);
-  // });
+const iconStyles: CSSProperties = {
+  marginLeft: '16px',
+  color: 'rgba(0, 0, 0, 0.2)',
+  fontSize: '24px',
+  verticalAlign: 'middle',
+  cursor: 'pointer',
+};
+const handleSubmit = async (values: API.LoginParams) => {
+  try {
+    // 登录
+    // const msg = await login({ ...values, type });
+    // if (msg.status === 'ok') {
+    //   const defaultLoginSuccessMessage = intl.formatMessage({
+    //     id: 'pages.login.success',
+    //     defaultMessage: '登录成功！',
+    //   });
+    //   message.success(defaultLoginSuccessMessage);
+    //   await fetchUserInfo();
+    //   /** 此方法会跳转到 redirect 参数所在的位置 */
+    //   if (!history) return;
+    //   const { query } = history.location;
+    //   const { redirect } = query as { redirect: string };
+    //   history.push(redirect || '/');
+    //   return;
+    // }
+    // console.log(msg);
+    // // 如果失败去设置用户错误信息
+    // setUserLoginState(msg);
+    console.log('debugger');
+    history.push('/');
+  } catch (error) {
+    message.error('登陆失败');
+  }
 };
 
-const Login: React.FC<LoginProps> = ({ user, location, dispatch }) => {
-  // 登录校验
+const Login = () => {
+  const [loginType, setLoginType] = useState<LoginType>('phone');
 
-  const { userId } = user.currentUser;
-  console.log('debugger:user', user);
-
-  const isLogin = !!userId;
-  if (isLogin) {
-    const { from = '/' } = location.state || {};
-    return <Redirect to={from} />;
-  } else {
-    message.success('登陆失败');
-  }
   return (
-    <div
-      style={{
-        width: 330,
-        margin: 'auto',
-      }}
-    >
-      <ProForm
-        onFinish={async () => {
-          // await waitTime(2000);
-          if (dispatch) {
-            dispatch({ type: 'user/fetchCurrent' });
-          }
-          const { userId } = user.currentUser;
-          const isLogin = !!userId;
-          if (isLogin) {
-            const { from = '/' } = location.state || {};
-            message.success('登陆成功');
-            return <Redirect to={from} />;
-          } else {
-            message.success('登陆失败');
-          }
-          console.log('debugger:user', user);
-        }}
-        submitter={{
-          searchConfig: { submitText: '登录' },
-          render: (_, dom: any) => dom.pop(),
-          submitButtonProps: {
-            size: 'large',
-            style: { width: '100%' },
-          },
+    <div style={{ backgroundColor: 'white' }}>
+      <LoginForm
+        logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
+        title="Github"
+        subTitle="全球最大同性交友网站"
+        actions={
+          <Space>
+            其他登录方式
+            <AlipayCircleOutlined style={iconStyles} />
+            <TaobaoCircleOutlined style={iconStyles} />
+            <WeiboCircleOutlined style={iconStyles} />
+          </Space>
+        }
+        onFinish={async (values) => {
+          await handleSubmit(values as API.LoginParams);
         }}
       >
-        <h1
-          style={{
-            textAlign: 'center',
-          }}
+        <Tabs
+          activeKey={loginType}
+          onChange={(activeKey) => setLoginType(activeKey as LoginType)}
         >
-          <img
-            style={{
-              height: '44px',
-              marginRight: 16,
-            }}
-            alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-          />
-          Ant Design
-        </h1>
+          <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
+          <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
+        </Tabs>
+        {loginType === 'account' && (
+          <>
+            <ProFormText
+              name="username"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined className={'prefixIcon'} />,
+              }}
+              placeholder={'用户名: admin or user'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入用户名!',
+                },
+              ]}
+            />
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined className={'prefixIcon'} />,
+              }}
+              placeholder={'密码: ant.design'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码！',
+                },
+              ]}
+            />
+          </>
+        )}
+        {loginType === 'phone' && (
+          <>
+            <ProFormText
+              fieldProps={{
+                size: 'large',
+                prefix: <MobileOutlined className={'prefixIcon'} />,
+              }}
+              name="mobile"
+              placeholder={'手机号'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入手机号！',
+                },
+                {
+                  pattern: /^1\d{10}$/,
+                  message: '手机号格式错误！',
+                },
+              ]}
+            />
+            <ProFormCaptcha
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined className={'prefixIcon'} />,
+              }}
+              captchaProps={{
+                size: 'large',
+              }}
+              placeholder={'请输入验证码'}
+              captchaTextRender={(timing, count) => {
+                if (timing) {
+                  return `${count} ${'获取验证码'}`;
+                }
+                return '获取验证码';
+              }}
+              name="captcha"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入验证码！',
+                },
+              ]}
+              onGetCaptcha={async () => {
+                message.success('获取验证码成功！验证码为：1234');
+              }}
+            />
+          </>
+        )}
         <div
           style={{
-            marginTop: 12,
-            textAlign: 'center',
-            marginBottom: 40,
+            marginBottom: 24,
           }}
         >
-          Ant Design 是西湖区最具影响力的 Web 设计规范
+          <ProFormCheckbox noStyle name="autoLogin">
+            自动登录
+          </ProFormCheckbox>
+          <a
+            style={{
+              float: 'right',
+            }}
+          >
+            忘记密码
+          </a>
         </div>
-        <ProFormText
-          fieldProps={{
-            size: 'large',
-            prefix: <MobileOutlined />,
-          }}
-          name="phone"
-          placeholder="请输入手机号"
-          rules={[
-            {
-              required: true,
-              message: '请输入手机号!',
-            },
-            {
-              pattern: /^1\d{10}$/,
-              message: '不合法的手机号格式!',
-            },
-          ]}
-        />
-        <ProFormCaptcha
-          fieldProps={{
-            size: 'large',
-            prefix: <MailOutlined />,
-          }}
-          captchaProps={{
-            size: 'large',
-          }}
-          phoneName="phone"
-          name="captcha"
-          rules={[
-            {
-              required: true,
-              message: '请输入验证码',
-            },
-          ]}
-          placeholder="请输入验证码"
-          onGetCaptcha={async (phone) => {
-            // await waitTime(1000);
-            message.success(`手机号 ${phone} 验证码发送成功!`);
-          }}
-        />
-      </ProForm>
+      </LoginForm>
     </div>
   );
 };
