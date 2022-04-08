@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Button, message } from 'antd';
+import { Drawer, message } from 'antd';
 import Graphin, { IG6GraphEvent, GraphinContext } from '@antv/graphin';
 import { INode, NodeConfig } from '@antv/g6';
 import { ContextMenu } from '@antv/graphin-components';
 import { NodeMenu } from '@/pages/graphTool/components/NodeMenu';
+import DrawerGraphTool from '@/pages/graphTool/components/Drawer';
 import './index.less';
 
 // 测试部分
@@ -30,8 +31,18 @@ const nodeListTest = {
   ],
 };
 
+
+
+// 布局设定
+const layout = {
+  type: 'graphin-force',
+};
+// 右键菜单
+const { Menu } = ContextMenu;
+
+
 // 交互式事件
-const SampleBehavior = () => {
+const SampleBehavior = (props: any) => {
   const { graph, apis } = useContext(GraphinContext);
   useEffect(() => {
     // 初始化聚焦到`node-1`
@@ -39,7 +50,7 @@ const SampleBehavior = () => {
     const handleClick = (evt: IG6GraphEvent) => {
       const node = evt.item as INode;
       const model = node.getModel() as NodeConfig;
-      message.info(model.id);
+      props.onClickElement(model)
       // apis.focusNodeById(model.id);
     };
     // 每次点击聚焦到点击节点上
@@ -51,47 +62,15 @@ const SampleBehavior = () => {
   return null;
 };
 
-// 布局设定
-const layout = {
-  type: 'graphin-force',
-};
-// 右键菜单
-const { Menu } = ContextMenu;
-
-const BottomBar = (nodeList, graphinRef) => {
-  <div>
-    <Button type="primary">添加数据</Button>
-    <Button
-      type="primary"
-      onClick={() => {
-        nodeList.edges.push({
-          source: nodeList.nodes.lastItem.id,
-          target: 'node0',
-        });
-        console.log(nodeList.edges);
-        graphinRef.current.graph.addItem('edge', nodeList.edges.lastItem);
-      }}
-    >
-      添加边
-    </Button>
-    <Button
-      type="primary"
-      onClick={() => {
-        console.log(nodeList.nodes);
-      }}
-    >
-      查看数据信息
-    </Button>
-  </div>;
-};
-
 export default function GraphTool() {
   const [nodeList, setNodeList] = useState(nodeListTest);
-  const newEdge = { source: '', target: '' };
   const graphinRef: any = React.createRef();
-  useEffect(() => {
-    const { graph, apis } = graphinRef.current;
-  });
+  const [visibleDrawer, setVisibleDrawer] = useState(false)
+  const [contentDrawer, setContentDrawer] = useState({})
+  const onCloseDrawer = () => {
+    setVisibleDrawer(false)
+  }
+
   // 画布右键菜单
   const CanvasMenu = () => {
     const { graph, contextmenu } = React.useContext(GraphinContext);
@@ -128,39 +107,10 @@ export default function GraphTool() {
       </Menu>
     );
   };
-  // 节点菜单
-  // const NodeMenu = () => {
-  //   const { graph, contextmenu } = React.useContext(GraphinContext);
-  //   const context = contextmenu.canvas;
-  //   const targetNode = contextmenu.node;
-  //   const handleDownload = () => {
-  //     graph.downloadFullImage('canvas-contextmenu');
-  //     context.handleClose();
-  //   };
-  //   const addNewEdgeSource = () => {
-  //     newEdge.source = targetNode.item._cfg.id;
-  //     context.handleClose();
-  //   };
-  //   const addNewEdgeTarget = () => {
-  //     newEdge.target = targetNode.item._cfg.id;
-  //     nodeList.edges.push({ source: newEdge.source, target: newEdge.target });
-  //     graphinRef.current.graph.addItem('edge', nodeList.edges.lastItem);
-  //     message.info(`添加关系成功`);
-  //     context.handleClose();
-  //   };
-  //   const nodePropsHandle = () => {
-
-  //   };
-  //   return (
-  //     <Menu bindType="canvas">
-  //       <Menu.Item onClick={addNewEdgeSource}>添加关系(设为开始节点)</Menu.Item>
-  //       <Menu.Item onClick={addNewEdgeTarget}>添加关系(设为结束节点)</Menu.Item>
-  //       <Menu.Item onClick={nodePropsHandle}>添加属性</Menu.Item>
-  //       <Menu.Item>删除节点</Menu.Item>
-  //     </Menu>
-  //   );
-  // };
-
+  const onClickElement = (element: any) => {
+    setVisibleDrawer(true)
+    setContentDrawer(element)
+  }
   return (
     <div id="graph-container">
       <Graphin data={nodeList} layout={layout} ref={graphinRef} checked={false}>
@@ -170,8 +120,9 @@ export default function GraphTool() {
         <ContextMenu style={{ width: '180px' }} bindType="canvas">
           <CanvasMenu />
         </ContextMenu>
-        <SampleBehavior />
+        <SampleBehavior onClickElement={onClickElement} />
       </Graphin>
+      <DrawerGraphTool  content={contentDrawer} onCloseDrawer={onCloseDrawer} visibleDrawer={visibleDrawer} />
     </div>
   );
 }
