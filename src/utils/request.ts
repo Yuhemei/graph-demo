@@ -26,6 +26,24 @@ const codeMessages = {
 export interface response {
   status: number;
 }
+
+// 错误处理
+interface ErrorInfoStructure {
+  success: boolean; // if request is success
+  data?: any; // response data
+  errorCode?: string; // code for errorType
+  errorMessage?: string; // message display to user
+  showType?: number; // error display type： 0 silent; 1 message.warn; 2 message.error; 4 notification; 9 page
+  traceId?: string; // Convenient for back-end Troubleshooting: unique request ID
+  host?: string; // Convenient for backend Troubleshooting: host of current access server
+}
+
+// 抛出异常
+interface RequestError extends Error {
+  data?: any; // 这里是后端返回的原始数据
+  info?: ErrorInfoStructure;
+}
+
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
   if (response && response.status) {
@@ -48,6 +66,34 @@ const errorHandler = (error: { response: Response }): Response => {
 const request = extend({
   errorHandler, //默认错误处理
   credentials: 'include', //默认请求是否带上cookie
+  prefix: '/api/v1',
+  timeout: 1000,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+  requestType: 'json',
+});
+
+// Middleware
+request.use(async (ctx, next) => {
+  const { req } = ctx;
+  const { url, options } = req;
+
+  if (url.indexOf('/api') !== 0) {
+    ctx.req.url = `/api/v1/${url}`;
+  }
+  ctx.req.options = {
+    ...options,
+    foo: 'foo',
+  };
+
+  await next();
+
+  const { res } = ctx;
+  const { success = false } = res;
+  if (!success) {
+    console.log('请求失败');
+  }
 });
 
 export default request;
