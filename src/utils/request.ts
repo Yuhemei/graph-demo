@@ -44,6 +44,7 @@ interface RequestError extends Error {
   info?: ErrorInfoStructure;
 }
 
+// 默认错误处理
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
   if (response && response.status) {
@@ -72,19 +73,20 @@ const request = extend({
     'Content-Type': 'multipart/form-data',
   },
   requestType: 'json',
+  getResponse: false
 });
 
-// Middleware
+// Middleware拦截
 request.use(async (ctx, next) => {
   const { req } = ctx;
   const { url, options } = req;
-
+  // enhance request 请求再封装
   if (url.indexOf('/api') !== 0) {
     ctx.req.url = `/api/v1/${url}`;
   }
   ctx.req.options = {
     ...options,
-    foo: 'foo',
+    // foo: 'foo',
   };
 
   await next();
@@ -95,5 +97,31 @@ request.use(async (ctx, next) => {
     console.log('请求失败');
   }
 });
+request.use(async (ctx, next) => {
+  console.log('instanceA1');
+  await next();
+  console.log('instanceA2');
+});
+request.use(async (ctx, next) => {
+  console.log('instanceB1');
+  await next();
+  console.log('instanceB2');
+});
+request.use(
+  async (ctx, next) => {
+    console.log('globalA1');
+    await next();
+    console.log('globalA2');
+  },
+  { global: true }
+);
+request.use(
+  async (ctx, next) => {
+    console.log('coreA1');
+    await next();
+    console.log('coreA2');
+  },
+  { core: true }
+);
 
 export default request;

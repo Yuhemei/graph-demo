@@ -1,11 +1,11 @@
 import { defineConfig } from 'umi';
-
+import '@/utils'
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
   routes: [
-    // { path: '/login', component: '@/pages/login' },
+    { path: '/login', component: '@/pages/login' },
     {
       path: '/',
       component: '@/layouts/BasicLayout',
