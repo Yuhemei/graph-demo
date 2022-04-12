@@ -1,5 +1,4 @@
 import { defineConfig } from 'umi';
-import '@/utils'
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
@@ -13,7 +12,9 @@ export default defineConfig({
         { path: '/', redirect: '/home' },
         { path: '/home', component: '@/pages/index' },
         { path: '/workbench', component: '@/pages/workbench/index' },
-        { path: '/design', component: '@/pages/design/index' },
+        { path: '/flow', component: '@/pages/editor/flow/index' },
+        { path: '/koni', component: '@/pages/editor/koni/index' },
+        { path: '/mind', component: '@/pages/editor/mind/index' },
         {
           path: '/knowledgeManagement',
           component: '@/pages/knowledgeManagement/index',
@@ -26,4 +27,5 @@ export default defineConfig({
     },
   ],
   fastRefresh: {},
+  mfsu: {}
 });

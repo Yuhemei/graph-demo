@@ -28,23 +28,18 @@ const TopNavMenu: {
     disabled: false,
   },
   {
-    name: '关联分析',
-    link: 'design',
+    name: '流程图',
+    link: 'flow',
     disabled: false,
   },
   {
-    name: '知识管理',
-    link: 'knowledgeManagement',
+    name: '拓扑图',
+    link: 'koni',
     disabled: false,
   },
   {
-    name: '配置管理',
-    link: 'configManagement',
-    disabled: false,
-  },
-  {
-    name: '登录',
-    link: 'login',
+    name: '脑图',
+    link: 'mind',
     disabled: false,
   },
 ];
@@ -52,7 +47,6 @@ const TopNavMenu: {
 const findPathName = (link: string) => {
   if (link) {
     let el: any = TopNavMenu.find((element) => element.link === link);
-    console.log('debugger:link', link);
     return el.name;
   } else {
   }
@@ -104,15 +98,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
             mode="horizontal"
             defaultSelectedKeys={[pageIndex]}
             defaultOpenKeys={[pageIndex]}
-            onClick={({ item, key, keyPath, domEvent }) => {
+            onClick={({  key, keyPath, domEvent }) => {
               setTile('啥也');
-              console.log('item', item);
               console.log('key', key);
               console.log('keyPath', keyPath);
               console.log('domEvent', domEvent);
-
-              // setTile(findPathName(key));
-              // history.push(key);
+              setTile(findPathName(key));
+              history.push(key);
             }}
           >
             {TopNavMenu.map(({ name, link, disabled }) => {
@@ -151,7 +143,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
             <Content
               className="site-layout-background"
               style={{
-                padding: 24,
+                padding: 5,
                 margin: 0,
                 minHeight: '80vh',
               }}
