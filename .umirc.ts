@@ -9,9 +9,9 @@ export default defineConfig({
       path: '/',
       component: '@/layouts/BasicLayout',
       routes: [
-        { path: '/', redirect: '/home' },
-        { path: '/home', component: '@/pages/index' },
-        { path: '/workbench', component: '@/pages/workbench/index' },
+        { path: '/', redirect: '/graphin' },
+        { path: '/graphin', component: '@/pages/index' },
+        { path: '/G6Demo', component: '@/pages/g6-demo/index' },
         { path: '/flow', component: '@/pages/editor/flow/index' },
         { path: '/koni', component: '@/pages/editor/koni/index' },
         { path: '/mind', component: '@/pages/editor/mind/index' },

@@ -17,32 +17,32 @@ const TopNavMenu: {
   link: string;
   disabled: boolean;
 }[] = [
-  {
-    name: '首页',
-    link: 'home',
-    disabled: false,
-  },
-  {
-    name: '工作台',
-    link: 'workbench',
-    disabled: false,
-  },
-  {
-    name: '流程图',
-    link: 'flow',
-    disabled: false,
-  },
-  {
-    name: '拓扑图',
-    link: 'koni',
-    disabled: false,
-  },
-  {
-    name: '脑图',
-    link: 'mind',
-    disabled: false,
-  },
-];
+    {
+      name: 'G6 Demo',
+      link: 'G6Demo',
+      disabled: false,
+    },
+    {
+      name: 'Graphin Demo',
+      link: 'graphin',
+      disabled: false,
+    },
+    {
+      name: 'GG流程图',
+      link: 'flow',
+      disabled: false,
+    },
+    {
+      name: 'GG拓扑图',
+      link: 'koni',
+      disabled: false,
+    },
+    {
+      name: 'GG脑图',
+      link: 'mind',
+      disabled: false,
+    },
+  ];
 // 对路由进行处理，处理成汉字
 const findPathName = (link: string) => {
   if (link) {
@@ -98,7 +98,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
             mode="horizontal"
             defaultSelectedKeys={[pageIndex]}
             defaultOpenKeys={[pageIndex]}
-            onClick={({  key, keyPath, domEvent }) => {
+            onClick={({ key, keyPath, domEvent }) => {
               setTile('啥也');
               console.log('key', key);
               console.log('keyPath', keyPath);
