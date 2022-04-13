@@ -34,3 +34,4 @@ $ yarn start
 ## 常用资料
 
 1. [umi-request](https://github.com/umijs/umi-request)
+2. [g6-node-style](https://g6.antv.vision/zh/docs/manual/middle/elements/nodes/defaultNode/#%E6%A0%B7%E5%BC%8F%E5%B1%9E%E6%80%A7-style)

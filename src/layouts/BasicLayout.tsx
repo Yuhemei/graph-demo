@@ -59,7 +59,6 @@ interface BasicLayoutProps extends ConnectProps {
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   const { children, location, user, dispatch } = props;
   const pageIndex = location.pathname.split('/')[1];
-  console.log('debugger:props', props);
   const [title, setTile] = useState(findPathName(pageIndex));
   const [index, setIndex] = useState(pageIndex);
   useEffect(() => {
