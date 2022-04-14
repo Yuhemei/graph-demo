@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Drawer, message } from 'antd';
-import Graphin, { IG6GraphEvent, GraphinContext, Utils } from '@antv/graphin';
+import GGEditor, { Koni } from 'gg-editor';
+import { message } from 'antd';
+import Graphin, { IG6GraphEvent, GraphinContext, Utils, Components } from '@antv/graphin';
 import { INode, NodeConfig } from '@antv/g6';
 import { ContextMenu, Toolbar } from '@antv/graphin-components';
 import { NodeMenu } from '@/pages/graphTool/components/NodeMenu';
@@ -17,11 +18,29 @@ const nodeListTest = {
       id: 'node0',
       x: 100,
       y: 200,
+      // anchorPoints: [
+      //   [0, 1],
+      //   [0.5, 1],
+      // ],
     },
     {
       id: 'node1',
       x: 300,
       y: 200,
+      // anchorPoints: [
+      //   [0.5, 0],
+      //   [1, 0.5],
+      // ],
+    },
+    {
+      id: 'node2',
+      x: 300,
+      y: 200,
+      // anchorPoints: [
+      //   [0.5, 0],
+      //   [1, 0.5],
+      // ],
+      type: 'rect',
     },
   ],
   // 边集
@@ -41,12 +60,8 @@ const layout = {
 const { Menu } = ContextMenu;
 
 // 小地图
-const Minimap:any = new G6.Minimap({
-  size: [100, 100],
-  className: 'minimap',
-  type: 'delegate',
-});
-
+const { MiniMap } = Components
+const miniMap = new G6.Minimap()
 const MOCK_DATA = Utils.mock(10).circle().graphin();
 
 // 交互式事件
@@ -59,7 +74,7 @@ const SampleBehavior = (props: any) => {
       const node = evt.item as INode;
       const model = node.getModel() as NodeConfig;
       props.onClickElement(model)
-      // apis.focusNodeById(model.id);
+      apis.focusNodeById(model.id);
     };
     // 每次点击聚焦到点击节点上
     graph.on('node:click', handleClick);
@@ -70,15 +85,61 @@ const SampleBehavior = (props: any) => {
   return null;
 };
 
+
 export default function GraphTool() {
-  const [nodeList, setNodeList] = useState(MOCK_DATA);
+  const [nodeList, setNodeList] = useState(nodeListTest);
   const graphinRef: any = React.createRef();
   const [visibleDrawer, setVisibleDrawer] = useState(false)
   const [contentDrawer, setContentDrawer] = useState({})
   const onCloseDrawer = () => {
     setVisibleDrawer(false)
   }
-
+  const graphOption = {
+    container: graphinRef.current,
+    width: 400,
+    height: 300,
+    modes: {
+      default: ['drag-canvas', 'drag-node', 'zoom-canvas']
+    },
+    defaultNode: {
+      shape: 'node',
+      // 节点文本样式
+      labelCfg: {
+        style: {
+          fill: '#000000A6',
+          fontSize: 15
+        }
+      },
+      size: 60,
+      // 节点默认样式
+      style: {
+        stroke: '#72CC4A',
+        width: 100
+      }
+    },
+    defaultEdge: {
+      shape: 'polyline'
+    },
+    // 节点交互状态配置
+    nodeStateStyles: {
+      hover: {
+        stroke: 'red',
+        lineWidth: 3
+      }
+    },
+    edgeStateStyles: {
+      hover: {
+        stroke: 'blue',
+        lineWidth: 3
+      }
+    },
+    layout: {
+      type: 'dagre',
+      rankdir: 'LR',
+      nodesep: 30,
+      ranksep: 100
+    },
+  }
   // 画布右键菜单
   const CanvasMenu = () => {
     const { graph, contextmenu } = React.useContext(GraphinContext);
@@ -121,7 +182,7 @@ export default function GraphTool() {
   }
   return (
     <div id="graph-container">
-      <Graphin data={nodeList} layout={{ name: 'concentric' }} ref={graphinRef}>
+      <Graphin data={nodeList} layout={{ name: 'concentric' }} ref={graphinRef}  >
         <Toolbar />
         <ContextMenu style={{ width: '80px' }} bindType="node">
           <NodeMenu nodeList={nodeList} graphinRef={graphinRef} />
@@ -130,6 +191,7 @@ export default function GraphTool() {
           <CanvasMenu />
         </ContextMenu>
         <SampleBehavior onClickElement={onClickElement} />
+        <MiniMap />
       </Graphin>
       <DrawerGraphTool content={contentDrawer} onCloseDrawer={onCloseDrawer} visibleDrawer={visibleDrawer} />
     </div>

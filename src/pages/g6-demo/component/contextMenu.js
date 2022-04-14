@@ -9,7 +9,7 @@ const NodeContextMenu = ({ x = -300, y = 0 }) => {
       key="sub1"
       title={
         <span>
-          <Icon type="mail" />
+          {/* <Icon type="mail" /> */}
           <span>Navigation One</span>
         </span>
       }
@@ -27,7 +27,7 @@ const NodeContextMenu = ({ x = -300, y = 0 }) => {
       key="sub2"
       title={
         <span>
-          <Icon type="appstore" />
+          {/* <Icon type="appstore" /> */}
           <span>Navigation Two</span>
         </span>
       }
@@ -43,7 +43,7 @@ const NodeContextMenu = ({ x = -300, y = 0 }) => {
       key="sub4"
       title={
         <span>
-          <Icon type="setting" />
+          {/* <Icon type="setting" /> */}
           <span>Navigation Three</span>
         </span>
       }

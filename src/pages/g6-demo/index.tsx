@@ -64,15 +64,15 @@ export default function () {
 
     // 监听node上面mouse事件
     graph.on('node:mouseenter', evt => {
-      console.log("监听动作已经被发现");
-      console.log("node:mouseenter监听事件已经执行");
       const { item } = evt
       const model = item.getModel()
       const { x, y } = model
       const point = graph.getCanvasByPoint(x, y)
       setNodeToolTipX(point.x - 75)
       setNodeToolTipY(point.y + 15)
-      setShowNodeTooltip(true)
+      // setShowNodeTooltip(true)
+      console.log("debugger:evt",evt);
+      
     })
 
     // 节点上面触发mouseleave事件后隐藏tooltip和ContextMenu
@@ -88,6 +88,8 @@ export default function () {
     })
     // 监听节点上面右键菜单事件
     graph.on('node:contextmenu', evt => {
+      // setShowNodeTooltip(false)
+      // setShowNodeContextMenu(false)
       evt.preventDefault();
       const { item } = evt
       const model = item.getModel()
@@ -107,7 +109,7 @@ export default function () {
         width: 1450,
         height: 500,
         modes: {
-          default: ['drag-canvas', 'drag-node']
+          default: ['drag-canvas', 'drag-node','zoom-canvas']
         },
         defaultNode: {
           shape: 'node',
@@ -122,7 +124,7 @@ export default function () {
           // 节点默认样式
           style: {
             stroke: '#72CC4A',
-            width: 1000
+            width: 100
           }
         },
         defaultEdge: {
