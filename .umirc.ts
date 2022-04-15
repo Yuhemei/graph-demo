@@ -27,5 +27,6 @@ export default defineConfig({
     },
   ],
   fastRefresh: {},
-  mfsu: {}
+  mfsu: {},
+  exportStatic:{}
 });

@@ -19,10 +19,13 @@ function preventShake(todo, time = 500) {
   //   )
   // }
 }
-
+const toolbar = new G6.ToolBar({
+  container:'#g6-demo-toolbar'
+})
 export default function () {
   const ref = React.useRef(null)
-  let graph = null
+  
+  let graph :any = null
   let mouseenter = false
   // 边tooltip坐标
   const [showEdgeTooltip, setShowEdgeTooltip] = useState(false)
@@ -173,6 +176,7 @@ export default function () {
 
   return (
     <div id='g6-demo-container' ref={ref}>
+      <div id = "g6-demo-toolbar" ></div>
       {showEdgeTooltip && <EdgeToolTips x={edgeTooltipX} y={edgeTooltipY} />}
       {showNodeTooltip && <NodeTooltips x={nodeTooltipX} y={nodeTooltipY} />}
       {showNodeContextMenu && <NodeContextMenu x={nodeContextMenuX} y={nodeContextMenuY} />}
